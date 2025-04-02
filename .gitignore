@@ -1,3 +1,11 @@
 *.pyc
 /data
 /tests
+/ants/data
+*.prf
+*.lock
+*.sra
+*.fastq.gz
+*.tmp
+*.2
+*.1

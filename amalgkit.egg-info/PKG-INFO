@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: amalgkit
+Version: 0.12.15
+Summary: Tools for transcriptome amalgamation
+Home-page: https://github.com/kfuku52/amalgkit.git
+Author: Kenji Fukushima, Matthias Freund
+Author-email: kfuku52@gmail.com, matthias_freund@outlook.com
+License: BSD 3-clause License
+Keywords: transcriptome amalgamation
+Platform: UNKNOWN
+License-File: LICENSE
+
+UNKNOWN
+

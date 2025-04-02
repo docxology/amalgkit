@@ -1,0 +1,32 @@
+parameters:
+  correlation_method: spearman
+  max_missing: 0.2
+  min_genes: 10000
+  min_reads: 1000000
+  normalization_method: TMM
+species:
+- accession: GCF_003227725.1
+  annotation: GCF_003227725.1
+  genome: GCF_003227725.1
+  kallisto_index: data/reference/kallisto_indices/Camponotus_floridanus.idx
+  name: Camponotus floridanus
+  single_copy_genes: data/single_copy_genes/Cfloridanus.csv
+  transcriptome: data/reference/transcriptomes/Camponotus_floridanus_transcripts.fa
+- accession: GCF_000188075.2
+  annotation: GCF_003227725.1
+  genome: GCF_003227725.1
+  kallisto_index: data/reference/kallisto_indices/Solenopsis_invicta.idx
+  name: Solenopsis invicta
+  single_copy_genes: data/single_copy_genes/Sinvicta.csv
+  transcriptome: data/reference/transcriptomes/Solenopsis_invicta_transcripts.fa
+- accession: GCF_003227715.1
+  annotation: GCF_003227725.1
+  genome: GCF_003227725.1
+  kallisto_index: data/reference/kallisto_indices/Harpegnathos_saltator.idx
+  name: Harpegnathos saltator
+  single_copy_genes: data/single_copy_genes/Hsaltator.csv
+  transcriptome: data/reference/transcriptomes/Harpegnathos_saltator_transcripts.fa
+- accession: GCF_000187915.1
+  kallisto_index: data/reference/kallisto_indices/Pogonomyrmex_barbatus.idx
+  name: Pogonomyrmex barbatus
+  transcriptome: data/reference/transcriptomes/Pogonomyrmex_barbatus_transcripts.fa

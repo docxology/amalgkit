@@ -1,0 +1,51 @@
+filters:
+  min_reads: 1000000
+  max_reads: 100000000
+  min_genes: 0
+  max_genes: 999999999
+  min_samples_per_condition: 2
+  max_samples_per_condition: 10
+
+species:
+  - "Pogonomyrmex barbatus"
+  - "Pogonomyrmex californicus"
+  - "Pogonomyrmex rugosus"
+  - "Pogonomyrmex occidentalis"
+
+tissues:
+  - "brain"
+  - "Brain"
+  - "head"
+  - "whole body"
+  - "antennae"
+  - "venom apparatus"
+
+conditions:
+  - "worker"
+  - "queen"
+  - "larva"
+  - "pupa"
+  - "forager"
+  - "Forager"
+
+exclude:
+  - "pooled"
+  - "technical_replicate"
+  - "low_quality"
+  - "mixed_tissue"
+  - "unknown_tissue"
+
+platform:
+  - "Illumina"
+  - "NovaSeq"
+  - "NextSeq 500"
+  - "Illumina HiSeq 4000"
+  - "Illumina HiSeq 3000"
+
+strategy:
+  - "RNA-Seq"
+  - "RNA-seq"
+
+layout:
+  - "paired"
+  - "single" 

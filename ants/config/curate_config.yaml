@@ -1,0 +1,32 @@
+outlier_detection:
+  method: "zscore"
+  threshold: 3.0
+  min_samples: 3
+
+bias_removal:
+  methods:
+    - "batch_effect"
+    - "library_size"
+    - "GC_content"
+  
+  parameters:
+    batch_effect:
+      method: "ComBat"
+      batch_column: "batch"
+    library_size:
+      method: "TMM"
+    GC_content:
+      method: "loess"
+
+quality_control:
+  min_reads: 1000000
+  max_reads: 100000000
+  min_genes: 10000
+  max_genes: 50000
+  min_correlation: 0.8
+  max_missing: 0.2
+
+output:
+  format: "csv"
+  include_metadata: true
+  include_quality_metrics: true 
