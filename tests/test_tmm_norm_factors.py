@@ -157,3 +157,21 @@ def test_calc_norm_factors_tmm_matches_edger_toy_example():
     )
     # Symmetry constraint: normalized factors multiply to 1.
     numpy.testing.assert_allclose(factors.prod(), 1.0, rtol=0.0, atol=1e-9)
+
+
+def test_calc_factor_tmm_survives_zero_counts_without_runtime_warnings(recwarn):
+    # Regression: zero counts make obs/ref ratios and log2 terms hit
+    # divide-by-zero; the finite mask drops those genes, so no RuntimeWarning
+    # should escape to stderr (or break -W error runs).
+    import warnings as _warnings
+
+    with _warnings.catch_warnings():
+        _warnings.simplefilter('error', RuntimeWarning)
+        factor = calc_factor_tmm(
+            obs=[0.0, 10.0, 5.0],
+            ref=[[10.0, 0.0], [20.0, 30.0], [8.0, 6.0]],
+            libsize_obs=15.0,
+            libsize_ref=[38.0, 36.0],
+        )
+    assert numpy.isfinite(factor)
+    assert factor > 0

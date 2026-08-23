@@ -405,15 +405,23 @@ def select_ruvseq_controls(
     return controls
 
 
-def compute_design_residuals(seq_uq_df, design_df):
-    with numpy.errstate(divide='ignore', invalid='ignore'):
-        samples_by_genes = numpy.log(
-            seq_uq_df.to_numpy(dtype=float)
-        ).transpose()
+def compute_design_residuals(seq_uq_df, design_df, epsilon=1.0):
+    # Rounded upper-quartile-normalized counts routinely contain exact zeros.
+    # Log-transform with a pseudo-count (matching ruvr_correct_counts) so the
+    # least-squares fit stays finite instead of poisoning lstsq with -inf and
+    # returning all-NaN residuals.
+    samples_by_genes = numpy.log(
+        seq_uq_df.to_numpy(dtype=float) + float(epsilon)
+    ).transpose()
     x = design_df.to_numpy(dtype=float)
     beta, _, _, _ = numpy.linalg.lstsq(x, samples_by_genes, rcond=None)
     fitted = x @ beta
     residuals = samples_by_genes - fitted
+    if not numpy.isfinite(residuals).all():
+        raise ValueError(
+            'compute_design_residuals produced non-finite residuals; '
+            'check for non-finite values in the input count matrix.'
+        )
     return pandas.DataFrame(residuals.transpose(), index=seq_uq_df.index, columns=seq_uq_df.columns)
 
 

@@ -115,14 +115,18 @@ def calc_factor_tmm(
     target_size = max(obs_vector.size, ref_vector.size)
     obs_scaled = _recycle(obs_vector / n_obs, target_size)
     ref_scaled = _recycle(ref_vector, target_size) / _recycle(n_ref_values, target_size)
-    log_r = numpy.log2(obs_scaled / ref_scaled)
-    abs_e = (numpy.log2(obs_scaled) + numpy.log2(ref_scaled)) / 2.0
-    left_var = _recycle((n_obs - obs_vector) / n_obs / obs_vector, target_size)
-    right_var = (
-        (_recycle(n_ref_values, target_size) - _recycle(ref_vector, target_size))
-        / _recycle(n_ref_values, target_size)
-        / _recycle(ref_vector, target_size)
-    )
+    # Downstream filtering drops every non-finite row, so silence the expected
+    # divide-by-zero / invalid warnings instead of flooding stderr (values are
+    # unchanged; the `finite` mask below is the actual guard).
+    with numpy.errstate(divide='ignore', invalid='ignore'):
+        log_r = numpy.log2(obs_scaled / ref_scaled)
+        abs_e = (numpy.log2(obs_scaled) + numpy.log2(ref_scaled)) / 2.0
+        left_var = _recycle((n_obs - obs_vector) / n_obs / obs_vector, target_size)
+        right_var = (
+            (_recycle(n_ref_values, target_size) - _recycle(ref_vector, target_size))
+            / _recycle(n_ref_values, target_size)
+            / _recycle(ref_vector, target_size)
+        )
     variances = left_var + right_var
     finite = numpy.isfinite(log_r) & numpy.isfinite(abs_e) & (abs_e > acutoff)
     log_r = log_r[finite]

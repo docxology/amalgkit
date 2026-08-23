@@ -6,6 +6,7 @@ from scipy.stats import f_oneway
 import amalgkit.batch_effect_ruvseq as batch_effect_ruvseq
 from amalgkit.batch_effect_ruvseq import (
     _between_lane_normalize_upper,
+    compute_design_residuals,
     run_ruvseq_backend,
     ruvr_correct_counts,
 )
@@ -599,3 +600,20 @@ def test_run_ruvseq_backend_reconstructs_raw_counts_when_correction_is_a_noop():
 
     assert int(summary['resolved_ruv_k']) == 0
     pandas.testing.assert_frame_equal(corrected_df, counts_df)
+
+
+def test_compute_design_residuals_handles_zero_counts():
+    # Regression: rounded UQ-normalized counts contain exact zeros. The
+    # least-squares residual path must log-transform with a pseudo-count so
+    # zeros do not poison lstsq with -inf and return all-NaN residuals
+    # (which later crash _compute_ruvr_basis's SVD).
+    counts_df = pandas.DataFrame(
+        {'s1': [0.0, 5.0, 10.0], 's2': [3.0, 0.0, 7.0], 's3': [2.0, 8.0, 0.0]},
+        index=['g1', 'g2', 'g3'],
+    )
+    design_df = pandas.DataFrame(
+        {'intercept': [1.0, 1.0, 1.0], 'group': [0.0, 1.0, 0.0]},
+        index=counts_df.columns,
+    )
+    residuals_df = compute_design_residuals(counts_df, design_df)
+    assert numpy.isfinite(residuals_df.to_numpy(dtype=float)).all()
